@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Idea Gatherer - Vinking</title>
+    <meta name="description" content="小小的编辑器">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="theme-color" content="#f5f5f5" media="(prefers-color-scheme:light)">
+    <meta name="theme-color" content="#282a36" media="(prefers-color-scheme:dark)">
+    <meta name="apple-mobile-web-app-title" content="Idea Gatherer">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="./css/editor.css">
+    <link rel="stylesheet" href="./css/codemirror.min.css" />
+    <link rel="stylesheet" href="./css/base16-light.min.css" />
+    <link rel="stylesheet" href="./css/dracula.css" />
+</head>
+
+<body>
+    <div class="panel">
+        <div class="editor">
+            <div class="col-md-6 code-edit">
+                <textarea id="html-editor" name="html-editor"></textarea>
+            </div>
+            <div class="col-md-6 code-execution">
+                <iframe id="result-frame"></iframe>
+            </div>
+        </div>
+        <div class="console">
+            <div class="consoleScroll">
+                <div id="consoleOutPut"></div>
+                <div class=input><svg width="120" height="120" fill="none" viewBox="0 0 120 120"><path stroke="#5ca0ff" stroke-linecap="round" stroke-width="14" d="M53 13l45.379 45.379a3 3 0 0 1 0 4.242L53 108"/></svg><textarea id="consoleInput" type="text"></textarea></div>
+            </div>
+        </div>
+        <div class="editor-controls">
+            <button id="run-button">运行</button>
+            <button id="styleSwitch-button">样式切换</button>
+        </div>
+    </div>
+    <script src="./js/codemirror.min.js"></script>
+    <script src="./js/closebrackets.js"></script>
+    <script src="./js/closetag.js"></script>
+    <script src="./js/anyword-hint.js"></script>
+    <script src="./js/htmlmixed.min.js"></script>
+    <script src="./js/xml.min.js"></script>
+    <script src="./js/javascript.min.js"></script>
+    <script src="./js/css.min.js"></script>
+    <script src="./js/message.js"></script>
+    <script src="./js/editor.js"></script>
+</body>
+
+</html>
