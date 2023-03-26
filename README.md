@@ -1,4 +1,4 @@
-# Idea Gatherer
+# Tiny Editor
 
 这是一个小小的编辑器，支持实时编辑和预览 HTML 代码。
 
