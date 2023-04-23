@@ -12,6 +12,10 @@
     <meta name="theme-color" content="#282a36" media="(prefers-color-scheme:dark)">
     <meta name="apple-mobile-web-app-title" content="Idea Gatherer">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <script data-pace-options='{"eventLag": false,"restartOnRequestAfter": false}' src="./js/pace.min.js"></script>
+    <link rel="stylesheet" href="./css/flowbite.min.css" />
+    <link rel="stylesheet" href="./css/progress_bar.css">
     <link rel="stylesheet" href="./css/editor.css">
     <link rel="stylesheet" href="./css/codemirror.min.css" />
     <link rel="stylesheet" href="./css/base16-light.min.css" />
@@ -19,26 +23,92 @@
 </head>
 
 <body>
-    <div class="panel">
-        <div class="editor">
-            <div class="col-md-6 code-edit">
+    <div class="flex flex-row flex-wrap h-screen">
+        <nav class="w-full bg-white border-gray-200 dark:bg-gray-900">
+            <div class="flex flex-wrap items-center justify-between mx-auto p-1">
+                <div class="items-center justify-between flex w-auto order-1">
+                    <button id="run-button"
+                        class="block py-1 mx-1 text-gray-900 rounded hover:bg-gray-100 hover:bg-transparent dark:text-white dark:hover:bg-gray-700 dark:hover:text-white dark:hover:bg-transparent dark:border-gray-700">运行️️</button>
+
+                    <button id="beautify-button"
+                        class="block py-1 mx-1 text-gray-900 rounded hover:bg-gray-100 hover:bg-transparent dark:text-white dark:hover:bg-gray-700 dark:hover:text-white dark:hover:bg-transparent dark:border-gray-700">格式化</button>
+
+                    <button id="styleSwitch-button"
+                        class="block py-1 mx-1 text-gray-900 rounded hover:bg-gray-100 hover:bg-transparent dark:text-white dark:hover:bg-gray-700 dark:hover:text-white dark:hover:bg-transparent dark:border-gray-700">样式切换</button>
+
+                    <button onclick="window.open(window.location.href);return false"
+                        class="block py-1 mx-1 text-gray-900 rounded hover:bg-gray-100 hover:bg-transparent dark:text-white dark:hover:bg-gray-700 dark:hover:text-white dark:hover:bg-transparent dark:border-gray-700">新窗口打开</button>
+                </div>
+                <div x-data="{ open: false }">
+                    <button @click="open = true"
+                        class="block py-1 mx-1 text-white rounded bg-blue-500 hover:bg-blue-800">关于</button>
+                    <div x-show.transition.opacity="open" @click.away="open = false"
+                        class="displaySelectAndDrag fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 z-10 w-72 p-8 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                        style="display: none;">
+                        <button type="button" @click="open = false"
+                            class="absolute right-5 text-white bg-gray-400 hover:bg-gray-500 rounded-full p-1 text-center inline-flex items-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" style="margin:0"
+                                viewBox="0 0 1024 1024">
+                                <path fill="#fff"
+                                    d="M512 466.944l233.472-233.472a31.744 31.744 0 0 1 45.056 45.056L557.056 512l233.472 233.472a31.744 31.744 0 0 1-45.056 45.056L512 557.056 278.528 790.528a31.744 31.744 0 0 1-45.056-45.056L466.944 512 233.472 278.528a31.744 31.744 0 0 1 45.056-45.056z" />
+                            </svg>
+                            <span class="sr-only">Icon description</span>
+                        </button>
+                        <div class="flex flex-col items-center p-10">
+                            <img class="w-24 h-24 mb-3 rounded-full shadow-lg displaySelectAndDrag"
+                                src="./icon/icon-r-180.png" />
+                            <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Idea Gatherer</h5>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">@ Vinking</span>
+                            <div class="flex mt-4 space-x-3 md:mt-6">
+                                <a href="https://vinking.top/" target="_blank"
+                                    class="inline-flex items-center px-4 py-2 text-xs text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700">Blog</a>
+                                <a href="https://github.com/DearVinking/Tiny_Editor" target="_blank"
+                                    class="inline-flex items-center px-4 py-2 text-xs text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700">Github</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="w-full flex flex-wrap" style="height:70%">
+            <div class="relative h-full w-1/2 col-md-6 code-edit">
                 <textarea id="html-editor" name="html-editor"></textarea>
             </div>
-            <div class="col-md-6 code-execution">
-                <iframe id="result-frame"></iframe>
+            <div class="relative h-full w-1/2 col-md-6 code-execution">
+                <iframe id="result-frame" class="h-full w-full"></iframe>
             </div>
         </div>
-        <div class="console">
+        <div x-data="{ open: false }" class="w-full text-center flex justify-center items-center displaySelectAndDrag" style="font-size:.5rem;height:3%">
+            <div @click="open = true" id="memory" class="w-full text-center flex justify-center items-center displaySelectAndDrag h-full">
+                正在等待 20 秒后的下一次垃圾回收以触发内存监测
+            </div>
+            <div x-show.transition.opacity="open" @click.away="open = false" class="displaySelectAndDrag fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 z-10 w-96 p-8 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" style="display: none;">
+                <button type="button" @click="open = false" class="absolute right-5 text-white bg-gray-400 hover:bg-gray-500 rounded-full p-1 text-center inline-flex items-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-blue-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" style="margin:0" viewBox="0 0 1024 1024">
+                        <path fill="#fff" d="M512 466.944l233.472-233.472a31.744 31.744 0 0 1 45.056 45.056L557.056 512l233.472 233.472a31.744 31.744 0 0 1-45.056 45.056L512 557.056 278.528 790.528a31.744 31.744 0 0 1-45.056-45.056L466.944 512 233.472 278.528a31.744 31.744 0 0 1 45.056-45.056z" />
+                    </svg>
+                </button>
+                <div class="flex flex-col items-center">
+                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">内存监控</h5>
+                    <div class="w-96 relative h-96 p-8">
+                        <canvas id="memoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="console w-full overflow-hidden overflow-hidden relative">
             <div class="consoleScroll">
                 <div id="consoleOutPut"></div>
-                <div class=input><svg width="120" height="120" fill="none" viewBox="0 0 120 120"><path stroke="#5ca0ff" stroke-linecap="round" stroke-width="14" d="M53 13l45.379 45.379a3 3 0 0 1 0 4.242L53 108"/></svg><textarea id="consoleInput" type="text"></textarea></div>
+                <div class="input flex"><svg width="120" height="120" fill="none" viewBox="0 0 120 120">
+                        <path stroke="#5ca0ff" stroke-linecap="round" stroke-width="14"
+                            d="M53 13l45.379 45.379a3 3 0 0 1 0 4.242L53 108" />
+                    </svg><textarea id="consoleInput" class="p-0 w-full text-base" type="text"></textarea></div>
             </div>
         </div>
-        <div class="editor-controls">
-            <button id="run-button">运行</button>
-            <button id="styleSwitch-button">样式切换</button>
-        </div>
     </div>
+    <script src="./js/flowbite.min.js"></script>
+    <script src="./js/chart.js"></script>
+    <script src="./js/alpine.min.js"></script>
     <script src="./js/codemirror.min.js"></script>
     <script src="./js/closebrackets.js"></script>
     <script src="./js/closetag.js"></script>
@@ -49,6 +119,9 @@
     <script src="./js/css.min.js"></script>
     <script src="./js/message.js"></script>
     <script src="./js/editor.js"></script>
+    <script src="./js/beautify.js"></script>
+    <script src="./js/beautify-html.js"></script>
+    <script src="./js/beautify-css.js"></script>
 </body>
 
 </html>
